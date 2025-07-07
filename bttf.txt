@@ -1,0 +1,57 @@
+function X = myfft(x, Fs, Ndes, Graph)
+
+    x = x(:);
+    N_org = length(x);                           
+    Num_stage = ceil(log2(N_org));            % aproximacion de una potencia de 2
+    N = 2^Num_stage;                         % dato para el zero padding
+    
+    switch Ndes
+        case 0   
+        otherwise
+            Ndes_org = Ndes;
+            N_stage = ceil(log2(Ndes_org));
+            Num_stage = N_stage;
+            N = 2^N_stage;
+    end
+    
+    x = [x; zeros(N - N_org, 1)];             % zero padding
+    f = x;
+    % Parte de Bitwise para las mariposas
+    index_dec_inv = bitrevorder(0:N-1);       % Usar bitrevorder para reordenación rápida
+    x = x(index_dec_inv + 1);                 % Arreglo ordenado para la operacion mariposa
+    Wn = exp((-1j * 2 * pi/N) .* (0:N/2-1));   % Todas las potencias de Wn en forma de arreglo
+    
+    for stage = 1:Num_stage
+        Num_group = N / (2^stage);            % Número de grupos
+        num_btfy = 2^(stage - 1);             % Número de operaciones de mariposa en cada grupo
+        for group = 0 : Num_group - 1 
+            for btfy = 0 : num_btfy - 1 
+                %Indices de los arreglos
+                index1 = (group * 2^stage) + btfy; 
+                index2 = index1 + num_btfy;
+                W = Wn((btfy * Num_group) + 1); %Potencia correspondiente
+                % Operaciones de mariposa
+                f(index1 + 1) = x(index1 + 1) + W * x(index2 + 1);
+                f(index2 + 1) = x(index1 + 1) - W * x(index2 + 1);
+            end
+        end
+        x = f;
+    end
+    X = x;
+
+    switch Graph
+        case 0
+        case 1
+            fnorm = (1:N/2) ./ N;
+            if Fs ~= 0 
+                fnorm = fnorm .* Fs;
+            end
+            Mag = abs(X(1:N/2));             
+            plot(fnorm, Mag);
+            title('Espectro de Magnitud');
+            xlabel('Frecuencia (Hz)');
+            ylabel('|X(f)|')
+        otherwise
+            disp('no match');
+    end
+end
