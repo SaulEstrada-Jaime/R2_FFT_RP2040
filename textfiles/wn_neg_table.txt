@@ -1,0 +1,59 @@
+typedef struct {
+  int32_t real;
+  int32_t imag;
+} fft_i32_t;
+
+void core_fft_i32(fft_context_i32_t * context, fft_i32_t * dest, fft_i32_t * src, int sign){
+  int n, k, m;
+  int half_N;
+  int k2;
+  int twiddle;
+  int twiddle_jump;
+  int twiddle_max;
+  int n_jump;
+  int n_start;
+  fft_i32_t tmp_product;
+  fft_i32_t twiddle_factor;
+  fft_i32_t tmp;
+
+  //copy the signal input to the tmp variable
+  for(n=0; n < context->N; n++){
+    m = bit_reversal(n,context->order);
+    dest[n] = src[m];
+  }
+
+        //This loop performs the FFT using the Cooley-Tukey algorithm
+  half_N = context->N >> 1;
+  for(k=0; k < context->order; k++){
+    n = 0;
+    k2 = (1<<k);
+
+    //Calculate the twiddle jump and max for the stage
+    twiddle_max = (1<<(context->order - 1));
+    twiddle_jump = (1<<(context->order - k - 1)); //equals 2^(kmax - k)
+
+    //Calculate the n jump for the stage
+    n_jump = k2<<1;
+    n_start = 0;
+
+    for(twiddle = 0; twiddle < twiddle_max; twiddle += twiddle_jump){
+
+      //twiddle value in the table (always < N/2)
+      twiddle_factor.real = context -> twiddle_table[twiddle].real;
+      twiddle_factor.imag = context -> twiddle_table[twiddle].imag * sign;
+
+                        //This loop executes a single butterfly operation (size-2 DFT operation)
+      for(n=n_start; n < context->N; n+= n_jump){
+        m = n+k2;
+        //This is the butterfly code
+        tmp_product = fft_mult_i32(dest[m], twiddle_factor);  //multiply
+        tmp = scale_add_i32(dest[n], tmp_product, context->scale); //accumlate
+        dest[m] = scale_subtract_i32(dest[n], tmp_product, context->scale);
+        dest[n] = tmp;
+
+      }
+      n_start++;
+    }
+
+  }
+}

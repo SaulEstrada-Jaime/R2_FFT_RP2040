@@ -1,44 +1,298 @@
 #include <stdint.h>
 #include <stdio.h>
-#include "headers/bitwork.h"
-#include "headers/complexwork.h"
-
+#include "headers/typework.h"
 #define N 8
 #define N_LENGH 256
-#define NUM_ WN 128
 const int NUM_GROUP[N] = {128,64,32,16,8,4,2,1};
-const int NUM_BTFY[N]  = {1,2,4,8,16,32,64,128};   
-const complex UNIT = {1, 0};
-const complex NEG_UNIT = {-1, 0};
+const int NUM_BTFY[N]  = {1,2,4,8,16,32,64,128};
+complex bridge [N_LENGH];
+complex Wx[N_LENGH];
 
 typedef union {
-    complex fftX;
-    complex fftY;
+    complex X; complex Y;
 } MoveData;
 
-int main(){
-    bit_reversal_permutation(x, N_LENGH);
-    MoveData REG1;
-    MoveData REG2;
+complex x[] = 
+{
+    { 11.000f, 0.0f },
+    { 4.561f, 0.0f },
+    { -3.752f, 0.0f },
+    { -9.746f, 0.0f },
+    { -7.207f, 0.0f },
+    { 3.805f, 0.0f },
+    { 8.648f, 0.0f },
+    { 8.173f, 0.0f },
+    { -1.570f, 0.0f },
+    { -9.558f, 0.0f },
+    { -7.528f, 0.0f },
+    { -0.959f, 0.0f },
+    { 9.254f, 0.0f },
+    { 8.703f, 0.0f },
+    { 1.172f, 0.0f },
+    { -6.901f, 0.0f },
+    { -10.556f, 0.0f },
+    { -1.812f, 0.0f },
+    { 6.002f, 0.0f },
+    { 9.956f, 0.0f },
+    { 4.567f, 0.0f },
+    { -6.364f, 0.0f },
+    { -9.004f, 0.0f },
+    { -6.118f, 0.0f },
+    { 4.566f, 0.0f },
+    { 10.151f, 0.0f },
+    { 5.740f, 0.0f },
+    { -1.936f, 0.0f },
+    { -10.552f, 0.0f },
+    { -6.918f, 0.0f },
+    { 1.518f, 0.0f },
+    { 8.625f, 0.0f },
+    { 9.244f, 0.0f },
+    { -1.121f, 0.0f },
+    { -7.730f, 0.0f },
+    { -9.324f, 0.0f },
+    { -1.564f, 0.0f },
+    { 8.410f, 0.0f },
+    { 8.559f, 0.0f },
+    { 3.574f, 0.0f },
+    { -7.195f, 0.0f },
+    { -9.892f, 0.0f },
+    { -3.438f, 0.0f },
+    { 4.628f, 0.0f },
+    { 10.984f, 0.0f },
+    { 4.520f, 0.0f },
+    { -4.079f, 0.0f },
+    { -9.594f, 0.0f },
+    { -7.188f, 0.0f },
+    { 4.006f, 0.0f },
+    { 8.766f, 0.0f },
+    { 7.907f, 0.0f },
+    { -1.564f, 0.0f },
+    { -9.779f, 0.0f },
+    { -7.352f, 0.0f },
+    { -0.756f, 0.0f },
+    { 9.229f, 0.0f },
+    { 8.802f, 0.0f },
+    { 0.823f, 0.0f },
+    { -6.896f, 0.0f },
+    { -10.519f, 0.0f },
+    { -1.718f, 0.0f },
+    { 6.292f, 0.0f },
+    { 9.750f, 0.0f },
+    { 4.553f, 0.0f },
+    { -6.572f, 0.0f },
+    { -9.035f, 0.0f },
+    { -5.847f, 0.0f },
+    { 4.554f, 0.0f },
+    { 10.338f, 0.0f },
+    { 5.491f, 0.0f },
+    { -2.090f, 0.0f },
+    { -10.509f, 0.0f },
+    { -6.952f, 0.0f },
+    { 1.874f, 0.0f },
+    { 8.553f, 0.0f },
+    { 9.205f, 0.0f },
+    { -1.262f, 0.0f },
+    { -7.947f, 0.0f },
+    { -9.070f, 0.0f },
+    { -1.548f, 0.0f },
+    { 8.632f, 0.0f },
+    { 8.501f, 0.0f },
+    { 3.314f, 0.0f },
+    { -7.167f, 0.0f },
+    { -10.038f, 0.0f },
+    { -3.141f, 0.0f },
+    { 4.724f, 0.0f },
+    { 10.928f, 0.0f },
+    { 4.502f, 0.0f },
+    { -4.414f, 0.0f },
+    { -9.453f, 0.0f },
+    { -7.144f, 0.0f },
+    { 4.166f, 0.0f },
+    { 8.902f, 0.0f },
+    { 7.626f, 0.0f },
+    { -1.559f, 0.0f },
+    { -9.980f, 0.0f },
+    { -7.206f, 0.0f },
+    { -0.522f, 0.0f },
+    { 9.182f, 0.0f },
+    { 8.898f, 0.0f },
+    { 0.495f, 0.0f },
+    { -6.916f, 0.0f },
+    { -10.461f, 0.0f },
+    { -1.650f, 0.0f },
+    { 6.576f, 0.0f },
+    { 9.546f, 0.0f },
+    { 4.520f, 0.0f },
+    { -6.761f, 0.0f },
+    { -9.086f, 0.0f },
+    { -5.555f, 0.0f },
+    { 4.538f, 0.0f },
+    { 10.513f, 0.0f },
+    { 5.278f, 0.0f },
+    { -2.276f, 0.0f },
+    { -10.450f, 0.0f },
+    { -6.999f, 0.0f },
+    { 2.216f, 0.0f },
+    { 8.492f, 0.0f },
+    { 9.136f, 0.0f },
+    { -1.374f, 0.0f },
+    { -8.183f, 0.0f },
+    { -8.814f, 0.0f },
+    { -1.529f, 0.0f },
+    { 8.818f, 0.0f },
+    { 8.464f, 0.0f },
+    { 3.019f, 0.0f },
+    { -7.128f, 0.0f },
+    { -10.177f, 0.0f },
+    { -2.856f, 0.0f },
+    { 4.841f, 0.0f },
+    { 10.852f, 0.0f },
+    { 4.502f, 0.0f },
+    { -4.751f, 0.0f },
+    { -9.327f, 0.0f },
+    { -7.082f, 0.0f },
+    { 4.305f, 0.0f },
+    { 9.073f, 0.0f },
+    { 7.334f, 0.0f },
+    { -1.572f, 0.0f },
+    { -10.159f, 0.0f },
+    { -7.090f, 0.0f },
+    { -0.259f, 0.0f },
+    { 9.118f, 0.0f },
+    { 8.994f, 0.0f },
+    { 0.173f, 0.0f },
+    { -6.965f, 0.0f },
+    { -10.362f, 0.0f },
+    { -1.607f, 0.0f },
+    { 6.880f, 0.0f },
+    { 9.342f, 0.0f },
+    { 4.452f, 0.0f },
+    { -6.909f, 0.0f },
+    { -9.166f, 0.0f },
+    { -5.237f, 0.0f },
+    { 4.522f, 0.0f },
+    { 10.669f, 0.0f },
+    { 5.084f, 0.0f },
+    { -2.482f, 0.0f },
+    { -10.358f, 0.0f },
+    { -7.054f, 0.0f },
+    { 2.547f, 0.0f },
+    { 8.466f, 0.0f },
+    { 9.036f, 0.0f },
+    { -1.448f, 0.0f },
+    { -8.424f, 0.0f },
+    { -8.559f, 0.0f },
+    { -1.480f, 0.0f },
+    { 8.964f, 0.0f },
+    { 8.458f, 0.0f },
+    { 2.712f, 0.0f },
+    { -7.082f, 0.0f },
+    { -10.305f, 0.0f },
+    { -2.606f, 0.0f },
+    { 4.989f, 0.0f },
+    { 10.730f, 0.0f },
+    { 4.506f, 0.0f },
+    { -5.074f, 0.0f },
+    { -9.210f, 0.0f },
+    { -6.971f, 0.0f },
+    { 4.414f, 0.0f },
+    { 9.255f, 0.0f },
+    { 7.038f, 0.0f },
+    { -1.587f, 0.0f },
+    { -10.302f, 0.0f },
+    { -6.996f, 0.0f },
+    { 0.020f, 0.0f },
+    { 9.041f, 0.0f },
+    { 9.076f, 0.0f },
+    { -0.128f, 0.0f },
+    { -7.044f, 0.0f },
+    { -10.234f, 0.0f },
+    { -1.573f, 0.0f },
+    { 7.186f, 0.0f },
+    { 9.161f, 0.0f },
+    { 4.358f, 0.0f },
+    { -7.036f, 0.0f },
+    { -9.271f, 0.0f },
+    { -4.918f, 0.0f },
+    { 4.503f, 0.0f },
+    { 10.794f, 0.0f },
+    { 4.911f, 0.0f },
+    { -2.728f, 0.0f },
+    { -10.238f, 0.0f },
+    { -7.101f, 0.0f },
+    { 2.873f, 0.0f },
+    { 8.458f, 0.0f },
+    { 8.895f, 0.0f },
+    { -1.507f, 0.0f },
+    { -8.686f, 0.0f },
+    { -8.302f, 0.0f },
+    { -1.409f, 0.0f },
+    { 9.090f, 0.0f },
+    { 8.481f, 0.0f },
+    { 2.388f, 0.0f },
+    { -7.026f, 0.0f },
+    { -10.407f, 0.0f },
+    { -2.375f, 0.0f },
+    { 5.178f, 0.0f },
+    { 10.593f, 0.0f },
+    { 4.530f, 0.0f },
+    { -5.398f, 0.0f },
+    { -9.128f, 0.0f },
+    { -6.839f, 0.0f },
+    { 4.484f, 0.0f },
+    { 9.443f, 0.0f },
+    { 6.732f, 0.0f },
+    { -1.621f, 0.0f },
+    { -10.416f, 0.0f },
+    { -6.942f, 0.0f },
+    { 0.332f, 0.0f },
+    { 8.946f, 0.0f },
+    { 9.157f, 0.0f },
+    { -0.394f, 0.0f },
+    { -7.144f, 0.0f },
+    { -10.068f, 0.0f },
+    { -1.564f, 0.0f },
+    { 7.481f, 0.0f },
+    { 8.990f, 0.0f },
+    { 4.244f, 0.0f },
+    { -7.122f, 0.0f },
+    { -9.388f, 0.0f },
+    { -4.582f, 0.0f },
+    { 4.504f, 0.0f },
+    { 10.894f, 0.0f },
+    { 4.779f, 0.0f },
+    { -3.000f, 0.0f },
+    { -10.113f, 0.0f },
+    { -7.144f, 0.0f },
+    { 3.170f, 0.0f },
+    { 8.479f, 0.0f },
+    { 8.724f, 0.0f },
+    { -1.545f, 0.0f },
+    { -8.942f, 0.0f },
+    { -8.057f, 0.0f },
+};
 
-    for (int stage = 0; stage < 8; stage++) {
+int main(){
+    MoveData REG;
+    bit_reversal_permutation(x,Wx,N_LENGH);
+    for (int stage = 0; stage < N; stage++) {
         int num_group =  NUM_GROUP[stage];
         int num_btfy  =  NUM_BTFY[stage];
         for (int group = 0; group < num_group; group++) {
             for (int btfy = 0; btfy < num_btfy; btfy++) {
-                complex Wn = Wn_table[(btfy * num_group) + 1]; //Se obtien las dos partes del complejo son de tipo flotante
+                complex Wn = Wn_table[(btfy * num_group)];
+                complex Bn = Bn_table[(btfy * num_group)];
                 int index1 = (group * (1 << (stage + 1))) + btfy;
                 int index2 = index1 + num_btfy;
-                REG1.fftX = dot_complex(x[index2 + 1], Wn);
-                REG1.fftY = dot_complex(REG1.fftX, NEG_UNIT);
-
-
-                
-                //MoveData.fftX[index1 + 1] = x[index1 + 1] + W * x[index2 + 1];
-                //MoveData.fftX[index2 + 1] = x[index1 + 1] - W * x[index2 + 1];
+                REG.X = dot_complex(Wx[index2], Wn);      //+ W * x[index2 + 1];
+                REG.Y = dot_complex(Wx[index2], Bn);      //- W * x[index2 + 1];
+                bridge[index1] = sum_complex(Wx[index1], REG.X); 
+                bridge[index2] = sum_complex(Wx[index1], REG.Y); 
             }
         }
-        //se hace swap entre otro arreglo para administrar el uso de memoria
+        //se hace swap entre otro arreglo para usar los mismos arreglos 
+        for(int i = 0; i < 256; i++){ complex_swap(&Wx[i], &bridge[i]); } //necesita un cambio de logica, incrementa la cantidad de operaciones dramaticamente
     }
+    //for(int r = 0; r <= N_LENGH; r++){complex j = Wx[r]; printf("%.3f", j.Re); printf("\n"); printf("%.3f", j.Im); printf("\n");}
     return 0;
 }

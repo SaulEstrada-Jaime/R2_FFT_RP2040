@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "complexwork.h": "c",
+        "complex": "c",
+        "fft_int32.h": "c",
+        "fft_i32.h": "c",
+        "data_config.h": "c"
+    }
+}

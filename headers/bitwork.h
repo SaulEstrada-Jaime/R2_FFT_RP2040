@@ -1,8 +1,11 @@
-//Funciones para la permutacion de bits y datos dentro del arreglo
+#include <math.h>
+
 void swap(float* a, float* b) {
     float temp = *a;
     *a = *b;
-    *b = temp;}
+    *b = temp;
+}
+
 // Invierte los bits de 'x' con una cantidad de bits 'bits'
 unsigned int reverse_bits(unsigned int x, unsigned int bits) {
     unsigned int result = 0;
